@@ -58,7 +58,5 @@ app.use(errorHandler);
 
 // ── Start Server ───────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\nAkshar ERP API running on http://localhost:${PORT}`);
-
-  console.log(`Health check at http://localhost:${PORT}/api/health\n`);
+  console.log(`\nServer is running on port: ${PORT}`);
 });

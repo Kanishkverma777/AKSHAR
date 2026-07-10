@@ -134,19 +134,20 @@ exports.update = async (req, res, next) => {
   }
 };
 
-// DELETE /api/subjects/:paperId/:schemeId  (soft delete)
+// DELETE /api/subjects/:paperId/:schemeId
 exports.remove = async (req, res, next) => {
   try {
     const { paperId, schemeId } = req.params;
     const { rows } = await pool.query(
-      `UPDATE subject_master SET is_active = false
-       WHERE paper_id = $1 AND scheme_id = $2 RETURNING *`,
+      `DELETE FROM subject_master
+       WHERE paper_id = $1 AND scheme_id = $2
+       RETURNING *`,
       [paperId, schemeId]
     );
     if (rows.length === 0) {
       return res.status(404).json({ success: false, error: 'Subject not found' });
     }
-    res.json({ success: true, message: 'Subject deactivated', data: rows[0] });
+    res.json({ success: true, message: 'Subject deleted', data: rows[0] });
   } catch (err) {
     next(err);
   }

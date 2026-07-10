@@ -93,7 +93,7 @@ exports.remove = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { rows } = await pool.query(
-      `UPDATE employees SET is_active = false WHERE emp_id = $1 RETURNING *`,
+      `DELETE FROM employees WHERE emp_id = $1 RETURNING *`,
       [id]
     );
     if (rows.length === 0) {

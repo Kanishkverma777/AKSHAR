@@ -94,19 +94,20 @@ exports.update = async (req, res, next) => {
   }
 };
 
-// DELETE /api/course-intake/:courseId/:acadYear  (soft delete)
+// DELETE /api/course-intake/:courseId/:acadYear
 exports.remove = async (req, res, next) => {
   try {
     const { courseId, acadYear } = req.params;
     const { rows } = await pool.query(
-      `UPDATE course_intake SET is_active = false
-       WHERE course_id = $1 AND acad_year = $2 RETURNING *`,
+      `DELETE FROM course_intake
+       WHERE course_id = $1 AND acad_year = $2
+       RETURNING *`,
       [courseId, acadYear]
     );
     if (rows.length === 0) {
       return res.status(404).json({ success: false, error: 'Course intake record not found' });
     }
-    res.json({ success: true, message: 'Course intake deactivated', data: rows[0] });
+    res.json({ success: true, message: 'Course intake deleted', data: rows[0] });
   } catch (err) {
     next(err);
   }
